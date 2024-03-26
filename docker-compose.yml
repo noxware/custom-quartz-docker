@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  quartz:
+    build:
+      context: .
+    volumes:
+      - "${QUARTZ_CONTENT}:/app/content"
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "${QUARTZ_PORT}:80"
+      # - "443:443"
+    environment:
+      - QUARTZ_PASSWORD=${QUARTZ_PASSWORD}
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile"
+      - "caddy_data:/data"
+      - "caddy_config:/config"
+    depends_on:
+      - quartz
+
+volumes:
+  caddy_data:
+  caddy_config:
